@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIMI K2 Thinking - Cognition Unleashed</title>
+    
+    <!-- Premium Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://unpkg.com/splitting@1.0.6/dist/splitting.js"></script>
+    <link href="https://unpkg.com/splitting@1.0.6/dist/splitting.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --thinking: #10b981;
+            --neural: #06b6d4;
+            --glow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transition: all 0.1s ease;
+            z-index: 9999;
+        }
+
+        .cursor.follower {
+            width: 40px;
+            height: 40px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        /* Neural Network Background */
+        #neural-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--thinking));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: var(--glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 0 3rem;
+            background: radial-gradient(circle at 30% 70%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 1000px;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--thinking);
+            border-radius: 50px;
+            color: var(--thinking);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero .typed-text {
+            background: linear-gradient(135deg, var(--primary), var(--thinking), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--gray);
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .thought-visual {
+            margin: 3rem 0;
+            height: 200px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .thought-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            opacity: 0;
+        }
+
+        .thought-connection {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            transform-origin: left center;
+            opacity: 0;
+        }
+
+        /* Thinking Demo Section */
+        .thinking-demo {
+            padding: 8rem 3rem;
+            background: rgba(15, 23, 42, 0.5);
+            position: relative;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .demo-input-section, .demo-output-section {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .demo-input-section h3, .demo-output-section h3 {
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .thinking-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(2, 6, 23, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            color: var(--light);
+            font-family: 'Inter', sans-serif;
+            resize: vertical;
+            min-height: 120px;
+            margin-bottom: 1.5rem;
+        }
+
+        .thinking-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+        }
+
+        .thought-process {
+            background: rgba(2, 6, 23, 0.8);
+            border-radius: 10px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .thought-step {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        .thought-step::before {
+            content: '➤';
+            position: absolute;
+            left: 0;
+            color: var(--thinking);
+            font-weight: bold;
+        }
+
+        .thought-step.active {
+            color: var(--thinking);
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Reasoning Chain */
+        .reasoning-chain {
+            margin: 2rem 0;
+        }
+
+        .reasoning-node {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reasoning-node:hover {
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+            transform: translateX(10px);
+        }
+
+        .reasoning-node h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            padding: 8rem 3rem;
+            text-align: center;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 4rem auto;
+        }
+
+        .model-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .model-card.thinking {
+            border-color: var(--thinking);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .model-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .model-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .performance-metrics {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 2rem;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Cognitive Features */
+        .cognitive-features {
+            padding: 8rem 3rem;
+            background: radial-gradient(circle at 70% 30%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .cognitive-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cognitive-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--thinking));
+        }
+
+        .cognitive-icon {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--thinking));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 3rem;
+            text-align: center;
+            border-top: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .footer-content h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--thinking));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .demo-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* Splitting.js for text animations */
+        .splitting .char {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        /* Loading animation for thinking */
+        .thinking-dots {
+            display: inline-block;
+        }
+
+        .thinking-dots::after {
+            content: '';
+            animation: thinking 1.5s infinite;
+        }
+
+        @keyframes thinking {
+            0% { content: '.'; }
+            33% { content: '..'; }
+            66% { content: '...'; }
+            100% { content: '.'; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor follower" id="cursorFollower"></div>
+
+    <!-- Neural Network Canvas -->
+    <canvas id="neural-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">KIMI K2 THINKING</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#thinking">Cognition</a></li>
+            <li><a href="#demo">Live Demo</a></li>
+            <li><a href="#comparison">Comparison</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">COGNITION ENHANCED</div>
+            <h1 data-splitting>Meet <span class="typed-text" id="typed-text"></span></h1>
+            <p class="hero-subtitle">Experience AI that doesn't just respond, but truly <strong>thinks</strong> through problems with multi-step reasoning, self-reflection, and cognitive depth.</p>
+            
+            <div class="thought-visual" id="thought-visual">
+                <!-- Animated thinking nodes will be inserted here -->
+            </div>
+            
+            <button class="cta-button" onclick="scrollToDemo()">
+                <i class="fas fa-brain"></i> Witness Cognition
+            </button>
+        </div>
+    </section>
+
+    <!-- Thinking Demo Section -->
+    <section class="thinking-demo" id="demo">
+        <div class="demo-container">
+            <div class="demo-input-section">
+                <h3><i class="fas fa-keyboard"></i> Input Challenge</h3>
+                <textarea class="thinking-input" id="thinkingInput" placeholder="Enter a complex problem, riddle, or multi-step question...">If a bat and a ball together cost $1.10, and the bat costs $1.00 more than the ball, how much does the ball cost? Explain your reasoning step-by-step.</textarea>
+                <button class="cta-button" onclick="runThinkingDemo()">
+                    <i class="fas fa-cogs"></i> Activate Thinking
+                </button>
+            </div>
+            
+            <div class="demo-output-section">
+                <h3><i class="fas fa-project-diagram"></i> Thought Process</h3>
+                <div class="thought-process" id="thoughtProcess">
+                    <div class="thinking-dots">Initializing cognitive architecture</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="comparison-section" id="comparison">
+        <h2 data-splitting>Thinking vs. Reacting</h2>
+        <p style="color: var(--gray); max-width: 700px; margin: 2rem auto;">See how KIMI K2 Thinking transforms problem-solving through genuine cognitive depth</p>
+        
+        <div class="comparison-grid">
+            <div class="model-card">
+                <div class="model-icon" style="color: var(--gray);">⚡</div>
+                <h3>Standard AI</h3>
+                <p>Pattern matching with immediate response</p>
+                <div class="performance-metrics">
+                    <div class="metric">
+                        <span class="metric-value" style="color: var(--gray);">0.3s</span>
+                        <div class="metric-label">Response Time</div>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-value" style="color: var(--gray);">72%</span>
+                        <div class="metric-label">Reasoning Accuracy</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="model-card thinking">
+                <div class="model-icon" style="color: var(--thinking);">🧠</div>
+                <h3>KIMI K2 Thinking</h3>
+                <p>Multi-step reasoning with self-reflection</p>
+                <div class="performance-metrics">
+                    <div class="metric">
+                        <span class="metric-value" style="color: var(--thinking);">2.1s</span>
+                        <div class="metric-label">Thoughtful Response</div>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-value" style="color: var(--thinking);">94%</span>
+                        <div class="metric-label">Reasoning Accuracy</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cognitive Features -->
+    <section class="cognitive-features">
+        <div class="container">
+            <h2 data-splitting style="text-align: center; margin-bottom: 4rem;">Cognitive Architecture</h2>
+            <div class="features-grid">
+                <div class="cognitive-card">
+                    <div class="cognitive-icon"><i class="fas fa-sitemap"></i></div>
+                    <h3>Chain-of-Thought</h3>
+                    <p>Decomposes complex problems into sequential reasoning steps with explicit logic connections.</p>
+                </div>
+                <div class="cognitive-card">
+                    <div class="cognitive-icon"><i class="fas fa-search"></i></div>
+                    <h3>Self-Reflection</h3>
+                    <p>Evaluates its own reasoning, identifies potential errors, and corrects course mid-thought.</p>
+                </div>
+                <div class="cognitive-card">
+                    <div class="cognitive-icon"><i class="fas fa-layer-group"></i></div>
+                    <h3>Multi-Hop Inference</h3>
+                    <p>Connects disparate pieces of information across multiple steps to reach novel conclusions.</p>
+                </div>
+                <div class="cognitive-card">
+                    <div class="cognitive-icon"><i class="fas fa-balance-scale"></i></div>
+                    <h3>Uncertainty Quantification</h3>
+                    <p>Acknowledges when it's unsure and actively seeks clarification or additional information.</p>
+                </div>
+                <div class="cognitive-card">
+                    <div class="cognitive-icon"><i class="fas fa-code-branch"></i></div>
+                    <h3>Abstraction & Generalization</h3>
+                    <p>Derives general principles from specific examples and applies them to new contexts.</p>
+                </div>
+                <div class="cognitive-card">
+                    <div class="cognitive-icon"><i class="fas fa-brain"></i></div>
+                    <h3>Metacognition</h3>
+                    <p>Thinks about its own thinking process, optimizing reasoning strategies in real-time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <h3>KIMI K2 THINKING</h3>
+            <p style="color: var(--gray); max-width: 600px; margin: 0 auto;">Cognition is not just about having thoughts, but about thinking about those thoughts. This is the foundation of true intelligence.</p>
+            <p style="margin-top: 2rem; font-size: 0.9rem; color: var(--gray);">
+                <i class="fas fa-microchip"></i> Powered by Advanced Cognitive Architecture | <i class="fas fa-flask"></i> Research-Grade Reasoning
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Splitting.js
+        Splitting();
+        
+        // Animate text on load
+        anime({
+            targets: '.splitting .char',
+            translateY: [50, 0],
+            opacity: [0, 1],
+            duration: 1000,
+            delay: anime.stagger(30),
+            easing: 'easeOutExpo'
+        });
+
+        // Typed.js initialization
+        const typed = new Typed('#typed-text', {
+            strings: ['KIMI K2', 'THINKING', 'COGNITION UNLEASHED'],
+            typeSpeed: 100,
+            backSpeed: 50,
+            backDelay: 2000,
+            loop: true,
+            showCursor: true,
+            cursorChar: '|'
+        });
+
+        // Neural Network Animation
+        const canvas = document.getElementById('neural-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const nodes = [];
+        const connections = [];
+
+        // Create nodes
+        for (let i = 0; i < 100; i++) {
+            nodes.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                radius: Math.random() * 2 + 1
+            });
+        }
+
+        function animateNeuralNetwork() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update and draw nodes
+            nodes.forEach(node => {
+                node.x += node.vx;
+                node.y += node.vy;
+                
+                if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
+                if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+                
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(99, 102, 241, 0.6)';
+                ctx.fill();
+                
+                // Draw connections
+                nodes.forEach(otherNode => {
+                    const distance = Math.sqrt(
+                        Math.pow(node.x - otherNode.x, 2) + 
+                        Math.pow(node.y - otherNode.y, 2)
+                    );
+                    
+                    if (distance < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo(node.x, node.y);
+                        ctx.lineTo(otherNode.x, otherNode.y);
+                        ctx.strokeStyle = `rgba(99, 102, 241, ${0.3 * (1 - distance / 150)})`;
+                        ctx.stroke();
+                    }
+                });
+            });
+            
+            requestAnimationFrame(animateNeuralNetwork);
+        }
+        animateNeuralNetwork();
+
+        // Thinking Demo
+        const thoughtSteps = [
+            "Analyzing problem structure...",
+            "Identifying key variables: bat = ball + $1.00, bat + ball = $1.10",
+            "Setting up equations: Let ball = x, then bat = x + 1.00",
+            "Combining: x + (x + 1.00) = 1.10 → 2x + 1.00 = 1.10",
+            "Solving: 2x = 0.10 → x = 0.05",
+            "Verifying: Ball = $0.05, Bat = $1.05, Total = $1.10 ✓",
+            "Reflecting: Initial intuition ($0.10) is incorrect because...",
+            "Final reasoning: The ball costs $0.05"
+        ];
+
+        function runThinkingDemo() {
+            const thoughtProcess = document.getElementById('thoughtProcess');
+            thoughtProcess.innerHTML = '';
+            
+            thoughtSteps.forEach((step, index) => {
+                setTimeout(() => {
+                    const stepDiv = document.createElement('div');
+                    stepDiv.className = 'thought-step';
+                    stepDiv.textContent = `[Step ${index + 1}] ${step}`;
+                    
+                    if (index === thoughtSteps.length - 1) {
+                        stepDiv.classList.add('active');
+                    }
+                    
+                    thoughtProcess.appendChild(stepDiv);
+                    
+                    // Animate step appearance
+                    anime({
+                        targets: stepDiv,
+                        opacity: [0, 1],
+                        translateX: [-20, 0],
+                        duration: 500,
+                        easing: 'easeOutQuad'
+                    });
+                    
+                    // Auto-scroll
+                    thoughtProcess.scrollTop = thoughtProcess.scrollHeight;
+                }, index * 800);
+            });
+        }
+
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        const cursorFollower = document.getElementById('cursorFollower');
+        
+        let mouseX = 0, mouseY = 0;
+        let followerX = 0, followerY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function animateCursor() {
+            followerX += (mouseX - followerX) * 0.1;
+            followerY += (mouseY - followerY) * 0.1;
+            
+            cursor.style.left = mouseX - 10 + 'px';
+            cursor.style.top = mouseY - 10 + 'px';
+            
+            cursorFollower.style.left = followerX - 20 + 'px';
+            cursorFollower.style.top = followerY - 20 + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Smooth Scroll
+        function scrollToDemo() {
+            document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
